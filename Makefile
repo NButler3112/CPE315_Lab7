@@ -1,18 +1,18 @@
-TARGET   = a.out
-CC       = gcc
-CCFLAGS  = -std=c89 -pedantic -Wall -Werror 
-LDFLAGS  = -lm
-SOURCES  = $(wildcard *.c)
-INCLUDES = $(wildcard *.h)
-OBJECTS  = $(SOURCES:.c=.o)
+CC = gcc
+CFLAGS = -Wall -std=gnu99 -pedantic -g
+MAIN = pipeline
+OBJS = pipeline.o readline.o
 
-all:$(TARGET)
+all : $(MAIN)
 
-$(TARGET):$(OBJECTS)
-	$(CC) -o $(TARGET) $(LDFLAGS) $(OBJECTS)
+$(MAIN) : $(OBJS)
+	$(CC) $(CFLAGS) -o $(MAIN) $(OBJS)
 
-$(OBJECTS):$(SOURCES) $(INCLUDES)
-	$(CC) -c $(CCFLAGS) $(SOURCES)
+pipeline.o : pipeline.c pipeline.h
+	$(CC) $(CFLAGS) -c pipeline.c
 
-clean:
-	rm -f $(TARGET) $(OBJECTS)
+readline.o : readline.c readline.h
+	$(CC) $(CFLAGS) -c readline.c
+
+clean :
+	rm $(MAIN) $(OBJS)

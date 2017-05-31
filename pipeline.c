@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "lab7.h"
+#include "pipeline.h"
 #include "readline.h"
 
 MB_HDR mb_hdr;
@@ -23,7 +23,7 @@ static void checkArgc(int argc)
 {
    if (argc != 2)
    {
-      fprintf(stderr, "Usage: ./a.out testcase\n");
+      fprintf(stderr, "Usage: ./pipeline testcase\n");
       exit(EXIT_FAILURE);
    }
 }
@@ -61,17 +61,7 @@ static void readInstr(FILE *file)
    }
 }
 
-static void instrF()
-{
-
-}
-
-static void id()
-{
-
-}
-
-static void ex()
+static void wb()
 {
 
 }
@@ -81,7 +71,17 @@ static void mem()
 
 }
 
-static void wb()
+static void ex()
+{
+
+}
+
+static void id()
+{
+
+}
+
+static void instrF()
 {
 
 }
@@ -109,6 +109,7 @@ int main(int argc, char **argv)
 {
    FILE *file;
    char *fileName;
+
    checkArgc(argc);
    fileName = argv[1];
    file = openFile(fileName);
@@ -117,12 +118,11 @@ int main(int argc, char **argv)
 
    for (haltflag = 0; haltflag; clock_count++)
    {
-      instrF();
-      id();
-      ex();
-      mem();
       wb();
-      
+      mem();
+      ex();
+      id();
+      instrF();
    }
 
    complete();
