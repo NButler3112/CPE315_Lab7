@@ -98,12 +98,11 @@ static void mem()
       mem_wb.dReg = ex_mem.dReg;
       mem_wb.value = ex_mem.aluOut;
       mem_wb.memFlag = 0;
-      if (ex_mem.bFlag != 0 || ex_mem.jFlag != 0)
+      if (ex_mem.bjFlag == 1)
       {
          mem_wb.memFlag = 0;
-         pc = ex_mem.newPC;
-         if (ex_mem.jFlag == 2)
-            mem_wb.memFlag = 1;
+         pc = ex_mem.nextPC;
+
          if_id = clearIfId();
          id_ex = decodeInstr(0x00000000, 0x00000000);
          if_id.active = 0;
@@ -152,24 +151,15 @@ static void ex()
    if (id_ex.active != 1)
    {
       fprintf(stderr, "EXECUTE\n");
-      ex_mem.active = 1;
-      ex_mem.jFlag = 0;
-      ex_mem.bFlag = 0;
-      ex_mem.mFlag = 0;
       if (id_ex.iType == 'r' && rFlags[id_ex.rs] == 0)
-         ex_mem.aluOut = executeR(id_ex.ra, id_ex.rb, id_ex.rd, id_ex.shamt, id_ex.funct,\
-            ex_mem.nextPC, &(ex_mem.dReg), &(ex_mem.newPC), &(ex_mem.jFlag), registers, &haltflag);
+         ex_mem = executeR(id_ex, &haltflag);
 
       else if (id_ex.iType == 'j' && rFlags[31] == 0)
-         ex_mem.aluOut = executeJ(id_ex.opcode, id_ex.jumpAddr, ex_mem.nextPC, &(ex_mem.dReg), &(ex_mem.newPC),\
-            &(ex_mem.jFlag));
+         ex_mem = executeJ(id_ex);
 
       else if (id_ex.iType == 'i' && rFlags[id_ex.rt] == 0)
-         ex_mem.aluOut = executeI(id_ex.opcode, id_ex.rs, id_ex.rt, id_ex.immed, registers,\
-            &(ex_mem.bFlag), ex_mem.nextPC, &(ex_mem.newPC), &(ex_mem.dReg),\
-            &(ex_mem.mFlag), &(ex_mem.memAddr), memory);
+         ex_mem = executeI(id_ex);
 
-      ex_mem.nextPC = id_ex.nextPC;
       instr_count++;
       ex_mem.active = 0;
       printEX_MEM(ex_mem);

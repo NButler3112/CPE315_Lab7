@@ -20,8 +20,8 @@ void printID_EX(ID_EX i)
 
 void printEX_MEM(EX_MEM e)
 {
-   printf("Branch: %d, Jump: %d, Memory: %d\n", e.bFlag, e.jFlag, e.mFlag);
-   printf("nextPC: 0x%08x, newPC: 0x%08x\n", e.nextPC, e.newPC);
+   printf("Branch or Jump: %d, Memory: %d\n", e.bjFlag, e.mFlag);
+   printf("nextPC: 0x%08x\n", e.nextPC);
    printf("Destination Register: %d, Memory Address: 0x%08x, ALUOut: 0x%08x\n\n", e.dReg, e.memAddr, e.aluOut);
 }
 
@@ -97,7 +97,7 @@ ID_EX decodeInstr(unsigned instruction, unsigned pc)
 {
    ID_EX id_ex;
    id_ex.active = 1;
-   id_ex.nextPC = pc;
+   id_ex.nextPC = pc + 4;
    id_ex.opcode = (instruction & 0xFC000000) >> 26;
    id_ex.rs = (instruction & 0x03E00000) >> 21;
    id_ex.rt = (instruction & 0x001F0000) >> 16;

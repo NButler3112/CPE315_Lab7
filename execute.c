@@ -3,262 +3,274 @@
 #include <string.h>
 #include "helper.h"
 
-unsigned executeR(unsigned ra, unsigned rb, unsigned rd, unsigned shamt,\
-   unsigned funct, unsigned nextPC, unsigned *dReg, unsigned *newPC,\
-   unsigned *jFlag, unsigned registers[32], int *haltFlag) 
+/* Determines the ALUOut, new PC value, destination register/memory address. The 
+ * function returns EX_MEM. 
+ */
+EX_MEM executeR(ID_EX i, int *haltFlag)
 {
-   *dReg = rd;
-   *jFlag = 0;
-   switch (funct) {
+   EX_MEM e;
+   e.active = 1;
+   e.nextPC = i.nextPC + 4;
+   e.aluOut = 0;
+   e.dReg = i.rd;
+   e.memAddr = 0x00000000;
+   e.mFlag = 0;
+   e.bjFlag = 0;
+   switch (i.funct) {
       case 0x00:
-         if (rd != 0)
-            return (unsigned int) rb << shamt;
+         if (i.rd != 0)
+            e.aluOut = (unsigned int) i.rb << i.shamt;
          break;
       case 0x02:
-         if (rd != 0)
-            return (unsigned int) rb >> shamt;
+         if (i.rd != 0)
+            e.aluOut = (unsigned int) i.rb >> i.shamt;
          break;
       case 0x03:
-         if (rd != 0)
-            return (signed int) rb >> shamt;
+         if (i.rd != 0)
+            e.aluOut = (signed int) i.rb >> i.shamt;
          break;
       case 0x04:
-         if (rd != 0)
-            return (unsigned int) rb << (unsigned int) ra;
+         if (i.rd != 0)
+            e.aluOut = (unsigned int) i.rb << (unsigned int) i.ra;
          break;
       case 0x06:
-         if (rd != 0)
-            return (unsigned int) rb >> (unsigned int) ra;
+         if (i.rd != 0)
+            e.aluOut = (unsigned int) i.rb >> (unsigned int) i.ra;
          break;
       case 0x07:
-         if (rd != 0)
-            return (signed int) rb >> (unsigned int) ra;
+         if (i.rd != 0)
+            e.aluOut = (signed int) i.rb >> (unsigned int) i.ra;
          break;
       case 0x08:
-         *jFlag = 1;
-         *newPC = (unsigned int) ra;
-         return *newPC;
+         e.dReg = 0;
+         e.nextPC = (unsigned int) i.ra;
+         e.bjFlag = 1;
          break;
       case 0x09:
-         *jFlag = 2;
-         *dReg = 31;
-         *newPC = (unsigned) ra;
-         return (unsigned int) nextPC;
+         e.dReg = 31;
+         e.nextPC = (unsigned) i.ra;
+         e.aluOut = i.nextPC;
+         e.bjFlag = 1;
          break;
       case 0x20:
-         if (rd != 0)
-            return (signed int) ra + (signed int) rb;
+         if (i.rd != 0)
+            e.aluOut = (signed int) i.ra + (signed int) i.rb;
          break;
       case 0x21:
-         if (rd != 0)
-            return (unsigned int) ra + (unsigned int) rb;
+         if (i.rd != 0)
+            e.aluOut = (unsigned int) i.ra + (unsigned int) i.rb;
          break;
       case 0x22:
-         if (rd != 0)
-            return (signed int) ra - (signed int) rb;
+         if (i.rd != 0)
+            e.aluOut = (signed int) i.ra - (signed int) i.rb;
          break;
       case 0x23:
-         if (rd != 0)
-            return (unsigned int) ra - (unsigned int) rb;
+         if (i.rd != 0)
+            e.aluOut = (unsigned int) i.ra - (unsigned int) i.rb;
          break;
       case 0x24:
-         if (rd != 0)
-            return ra & rb;
+         if (i.rd != 0)
+            e.aluOut = i.ra & i.rb;
          break;
       case 0x25:
-         if (rd != 0)
-            return ra | rb;
+         if (i.rd != 0)
+            e.aluOut = i.ra | i.rb;
          break;
       case 0x26:
-         if (rd != 0)
-            return ra ^ rb;
+         if (i.rd != 0)
+            e.aluOut = i.ra ^ i.rb;
          break;
       case 0x27:
-         if (rd != 0)
-            return ~(ra | rb);
+         if (i.rd != 0)
+            e.aluOut = ~(i.ra | i.rb);
          break;
       case 0x2A:
-         if (rd != 0) {
-            if ((signed int) ra < (signed int) rb)
-               return 1;
+         if (i.rd != 0) {
+            if ((signed int) i.ra < (signed int) i.rb)
+               e.aluOut = 1;
             else
-               return 0;
+               e.aluOut = 0;
          }
          break;
       case 0x2B:
-         if (rd != 0) {
-            if ((unsigned int) ra < (unsigned int) rb)
-               return 1;
+         if (i.rd != 0) {
+            if ((unsigned int) i.ra < (unsigned int) i.rb)
+               e.aluOut =  1;
             else
-               return 0;
+               e.aluOut = 0;
          }
          break;
       default:
-         if (funct == 0x0C) {
+         if (i.funct == 0x0C) {
             *haltFlag = 1;
-            fprintf(stderr, "Set haltflag\n");
          }
+         else
+            e.dReg = 0;
          break;
    }
-   return 0;
+   return e;
 }
 
-unsigned executeJ(unsigned opcode, unsigned jumpAddr, unsigned nextPC, unsigned *dReg,\
-   unsigned *newPC, unsigned *jFlag) 
+EX_MEM executeJ(ID_EX i)
 {
-   switch (opcode) {
+   EX_MEM e;
+   e.active = 1;
+   e.nextPC = i.nextPC + 4;
+   e.aluOut = 0;
+   e.dReg = 0;
+   e.memAddr = 0x00000000;
+   e.mFlag = 0;
+   e.bjFlag = 0;
+   switch (i.opcode) {
       case 0x02:
-         *jFlag = 1;
-         *newPC = jumpAddr;
-         return *newPC;
+         e.nextPC = i.jumpAddr;
+         e.bjFlag = 1;
          break;
       case 0x03:
-         *jFlag = 2;
-         *dReg = 31;
-         *newPC = jumpAddr;
-         return nextPC;
+         e.dReg = 31;
+         e.nextPC = i.jumpAddr;
+         e.bjFlag = 1;
          break;
    }
-   return 0;
+   return e;
 }
 
-unsigned executeI(unsigned opcode, unsigned rs, unsigned rt, unsigned immed,\
-   unsigned registers[32], unsigned *bFlag, unsigned nextPC, unsigned *newPC,\
-   unsigned *dReg, unsigned *mFlag, unsigned *memAddr, unsigned mem[1064])
+EX_MEM executeI(ID_EX i)
 {   
    unsigned int branch_addr;
    unsigned int zero_immed;
    signed int sign_immed;
 
-   *dReg = rt;
-   *mFlag = 0;
-   switch (opcode) {
+   EX_MEM e;
+   e.active = 1;
+   e.nextPC = i.nextPC + 4;
+   e.aluOut = 0;
+   e.dReg = i.rt;
+   e.memAddr = 0x00000000;
+   e.mFlag = 0;
+   e.bjFlag = 0;
+   switch (i.opcode) {
       case 0x04:
-         branch_addr = makeBranchAddr(immed);
-         if (registers[rs] == registers[rt])
+         branch_addr = makeBranchAddr(i.immed);
+         if (i.ra == i.rb)
          {
-            *bFlag = 1;
-            *newPC = nextPC + branch_addr;
+            e.nextPC = (i.nextPC - 8) + branch_addr;
+            e.bjFlag = 1;
          }
          break;
       case 0x05:
-         branch_addr = makeBranchAddr(immed);
-         if (registers[rs] != registers[rt])
+         branch_addr = makeBranchAddr(i.immed);
+         if (i.ra != i.rb)
          {
-            *bFlag = 1;
-            *newPC = nextPC + branch_addr;
+            e.nextPC = (i.nextPC - 8) + branch_addr;
+            e.bjFlag = 1;
          }
          break;
       case 0x08:
-         sign_immed = makeSignExtImmed(immed);
-         if (rt != 0)
-            return registers[rs] + sign_immed;
+         sign_immed = makeSignExtImmed(i.immed);
+         if (i.rt != 0)
+            e.aluOut = i.ra + sign_immed;
          break;
       case 0x09:
-         zero_immed = makeSignExtImmed(immed);
-         if (rt != 0)
-            return registers[rs] + zero_immed;
+         zero_immed = makeSignExtImmed(i.immed);
+         if (i.rt != 0)
+            e.aluOut = i.ra + zero_immed;
          break;
       case 0x0A:
-         sign_immed = makeSignExtImmed(immed);
-         if (rt != 0) {
-            if (registers[rs] < sign_immed)
-               return 1;
+         sign_immed = makeSignExtImmed(i.immed);
+         if (i.rt != 0) {
+            if (i.ra < sign_immed)
+               e.aluOut = 1;
             else
-               return 0;
+               e.aluOut = 0;
          }
          break;
       case 0x0B:
-         zero_immed = makeZeroImmed(immed);
-         if (rt != 0) {
-            if (registers[rs] < zero_immed)
-               return 1;
+         zero_immed = makeZeroImmed(i.immed);
+         if (i.rt != 0) {
+            if (i.ra < zero_immed)
+               e.aluOut = 1;
             else
-               return 0;
+               e.aluOut = 0;
          }
          break;
       case 0x0C:
-         zero_immed = makeZeroImmed(immed);
-         if (rt != 0)
-            return registers[rs] & zero_immed;
+         zero_immed = makeZeroImmed(i.immed);
+         if (i.rt != 0)
+            e.aluOut = i.ra & zero_immed;
          break;
       case 0x0D:
-         zero_immed = makeZeroImmed(immed);
-         if (rt != 0)
-            return registers[rs] | zero_immed;
+         zero_immed = makeZeroImmed(i.immed);
+         if (i.rt != 0)
+            e.aluOut = i.ra | zero_immed;
          break;
       case 0x0E:
-         zero_immed = makeZeroImmed(immed);
-         if (rt != 0)
-            return registers[rs] ^ zero_immed;
+         zero_immed = makeZeroImmed(i.immed);
+         if (i.rt != 0)
+            e.aluOut = i.ra ^ zero_immed;
          break;
       case 0x0F:
-         if (rt != 0)
-            return registers[rs] << 16;
+         if (i.rt != 0)
+            e.aluOut = i.ra << 16;
          break;
       case 0x20:
-         sign_immed = makeSignExtImmed(immed);
-         if (rt != 0)
+         sign_immed = makeSignExtImmed(i.immed);
+         if (i.rt != 0)
          {
-            *mFlag = 1;
-            *memAddr = registers[rs] + sign_immed;
-            return makeSignExtByte(mem[registers[rs] + sign_immed] & 0x000000FF);
+            e.memFlag = 1;
+            e.memAddr = i.ra + sign_immed;
          }
          break;
       case 0x21:
          sign_immed = makeSignExtImmed(immed);
-         if (rt != 0)
+         if (i.rt != 0)
          {
-            *mFlag = 2;
-            *memAddr = registers[rs] + sign_immed;
-            return makeSignExtHalfWord(mem[registers[rs] + sign_immed] & 0x0000FFFF);
+            e.mFlag = 2;
+            e.memAddr = i.ra + sign_immed;
          }
          break;
       case 0x23:
-         sign_immed = makeSignExtImmed(immed);
-         if (rt != 0)
+         sign_immed = makeSignExtImmed(i.immed);
+         if (i.rt != 0)
          {
-            *mFlag = 3;
-            *memAddr = registers[rs] + sign_immed;
-            return mem[registers[rs] + sign_immed];
+            e.mFlag = 3;
+            e.memAddr = i.ra + sign_immed;
          }
          break;
       case 0x24:
-         zero_immed = makeZeroImmed(immed);
-         if (rt != 0)
+         zero_immed = makeZeroImmed(i.immed);
+         if (i.rt != 0)
          {
-            *mFlag = 4;
-            *memAddr = registers[rs] + zero_immed;
-            return 0x000000FF & makeSignExtByte(mem[registers[rs] + zero_immed] & 0x000000FF);
+            e.mFlag = 4;
+            e.memAddr = i.ra + zero_immed;
          }
          break;
       case 0x25:
-         zero_immed = makeZeroImmed(immed);
-         if (rt != 0)
+         zero_immed = makeZeroImmed(i.immed);
+         if (i.rt != 0)
          {
-            *mFlag = 5;
-            *memAddr = registers[rs] + zero_immed;
-            return 0x0000FFFF & makeSignExtHalfWord(mem[registers[rs] + zero_immed] & 0x0000FFFF);
+            e.mFlag = 5;
+            e.memAddr = i.ra + zero_immed;
          }
          break;
       case 0x28:
-         sign_immed = makeSignExtImmed(immed);
-         *mFlag = 10;
-         *memAddr = registers[rs] + sign_immed;
-         return registers[rt] & 0x000000FF;
+         sign_immed = makeSignExtImmed(i.immed);
+         e.mFlag = 10;
+         e.memAddr = i.ra + sign_immed;
+         e.aluOut = i.rb & 0x000000FF;
          break;
       case 0x29:
-         sign_immed = makeSignExtImmed(immed);
-         *mFlag = 10;
-         *memAddr = registers[rs] + sign_immed;
-         return registers[rt] & 0x0000FFFF;
+         sign_immed = makeSignExtImmed(i.immed);
+         e.mFlag = 10;
+         e.memAddr = i.ra + sign_immed;
+         e.aluOut = i.rb & 0x0000FFFF;
          break;
       case 0x2B:
-         sign_immed = makeSignExtImmed(immed);
-         *mFlag = 10;
-         *memAddr = registers[rs] + sign_immed;
-         return registers[rt];
+         sign_immed = makeSignExtImmed(i.immed);
+         e.mFlag = 10;
+         e.memAddr = i.ra + sign_immed;
+         e.aluOut = i.rb;
          break;
    }
-   return 0;
+   return e;
 }
