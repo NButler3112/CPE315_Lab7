@@ -75,9 +75,9 @@ static void wb()
    if (mem_wb.active != 1)
    {
       fprintf(stderr, "WRITEBACK\n");
-      if (mem_wb.memFlag == 1)
+      if (mem_wb.memFlag == 2)
          memory[mem_wb.memAddr] = mem_wb.value;
-      else
+      else if (mem_wb.memFlag == 1)
          registers[mem_wb.dReg] = mem_wb.value;
       rFlags[mem_wb.dReg] = 0;
    }
@@ -89,17 +89,21 @@ static void mem()
    {
       fprintf(stderr, "MEMORY\n");
       mem_wb.active = 1;
+      mem_wb.dReg = ex_mem.dReg;
+      mem_wb.value = ex_mem.aluOut;
+      mem_wb.memFlag = 0;
       if (ex_mem.bFlag != 0 || ex_mem.jFlag != 0)
       {
+         mem_wb.memFlag = 0;
          pc = ex_mem.newPC;
+         if (ex_mem.jFlag == 2)
+            mem_wb.memFlag = 1;
          if_id.active = 0;
          id_ex.active = 0;
          ex_mem.active = 0;
       }
       else
-      {  mem_wb.dReg = ex_mem.dReg;
-         mem_wb.value = ex_mem.aluOut;
-         mem_wb.memFlag = 0;
+      {
          switch(ex_mem.mFlag)
          {
             case 1:
@@ -120,7 +124,7 @@ static void mem()
                   0x0000FFFF);
                break;
             case 10:
-               mem_wb.memFlag = 1;
+               mem_wb.memFlag = 2;
                mem_wb.memAddr = ex_mem.memAddr;
                break;
          }
@@ -140,20 +144,20 @@ static void ex()
       fprintf(stderr, "EXECUTE\n");
       ex_mem.active = 1;
       if (id_ex.iType == 'r' && rFlags[id_ex.rs] == 0)
-         ex_mem.aluOut = executeR(id_ex.rs, id_ex.rt, id_ex.rd, id_ex.shamt, id_ex.funct,\
+         ex_mem.aluOut = executeR(id_ex.ra, id_ex.rb, id_ex.rd, id_ex.shamt, id_ex.funct,\
             ex_mem.nextPC, &(ex_mem.dReg), &(ex_mem.newPC), &(ex_mem.jFlag), registers, &haltflag);
       else if (id_ex.iType == 'j' && rFlags[31] == 0)
-         executeJ(id_ex.opcode, id_ex.jumpAddr, ex_mem.nextPC, &(ex_mem.dReg), &(ex_mem.newPC),\
+         ex_mem.aluOut = executeJ(id_ex.opcode, id_ex.jumpAddr, ex_mem.nextPC, &(ex_mem.dReg), &(ex_mem.newPC),\
             &(ex_mem.jFlag));
       else if (id_ex.iType == 'i' && rFlags[id_ex.rt] == 0)
-         executeI(id_ex.opcode, id_ex.rs, id_ex.rt, id_ex.immed, registers,\
+         ex_mem.aluOut = executeI(id_ex.opcode, id_ex.rs, id_ex.rt, id_ex.immed, registers,\
             &(ex_mem.bFlag), ex_mem.nextPC, &(ex_mem.newPC), &(ex_mem.dReg),\
             &(ex_mem.mFlag), &(ex_mem.memAddr), memory);
       ex_mem.nextPC = id_ex.nextPC;
       instr_count++;
       ex_mem.active = 0;
    }
-   fprintf(stderr, "DReg: %d, MemAddr: 0x%08x\n", ex_mem.dReg, ex_mem.memAddr);
+   fprintf(stderr, "DReg: %d, MemAddr: 0x%08x, ALUOut: 0x%08x\n", ex_mem.dReg, ex_mem.memAddr, ex_mem.aluOut);
 }
 
 static void id()

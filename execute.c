@@ -3,7 +3,7 @@
 #include <string.h>
 #include "helper.h"
 
-unsigned executeR(unsigned rs, unsigned rt, unsigned rd, unsigned shamt,\
+unsigned executeR(unsigned ra, unsigned rb, unsigned rd, unsigned shamt,\
    unsigned funct, unsigned nextPC, unsigned *dReg, unsigned *newPC,\
    unsigned *jFlag, unsigned registers[32], int *haltFlag) 
 {
@@ -12,74 +12,74 @@ unsigned executeR(unsigned rs, unsigned rt, unsigned rd, unsigned shamt,\
    switch (funct) {
       case 0x00:
          if (rd != 0)
-            return (unsigned int) registers[rt] << shamt;
+            return (unsigned int) rb << shamt;
          break;
       case 0x02:
          if (rd != 0)
-            return (unsigned int) registers[rt] >> shamt;
+            return (unsigned int) rb >> shamt;
          break;
       case 0x03:
          if (rd != 0)
-            return (signed int) registers[rt] >> shamt;
+            return (signed int) rb >> shamt;
          break;
       case 0x04:
          if (rd != 0)
-            return (unsigned int) registers[rt] << (unsigned int) registers[rs];
+            return (unsigned int) rb << (unsigned int) ra;
          break;
       case 0x06:
          if (rd != 0)
-            return (unsigned int) registers[rt] >> (unsigned int) registers[rs];
+            return (unsigned int) rb >> (unsigned int) ra;
          break;
       case 0x07:
          if (rd != 0)
-            return (signed int) registers[rt] >> (unsigned int) registers[rs];
+            return (signed int) rb >> (unsigned int) ra;
          break;
       case 0x08:
          *jFlag = 1;
-         *newPC = (unsigned int) registers[rs];
+         *newPC = (unsigned int) ra;
          return *newPC;
          break;
       case 0x09:
          *jFlag = 2;
          *dReg = 31;
-         *newPC = (unsigned) registers[rs];
+         *newPC = (unsigned) ra;
          return (unsigned int) nextPC;
          break;
       case 0x20:
          if (rd != 0)
-            return (signed int) registers[rs] + (signed int) registers[rt];
+            return (signed int) ra + (signed int) rb;
          break;
       case 0x21:
          if (rd != 0)
-            return (unsigned int) registers[rs] + (unsigned int) registers[rt];
+            return (unsigned int) ra + (unsigned int) rb;
          break;
       case 0x22:
          if (rd != 0)
-            return (signed int) registers[rs] - (signed int) registers[rt];
+            return (signed int) ra - (signed int) rb;
          break;
       case 0x23:
          if (rd != 0)
-            return (unsigned int) registers[rs] - (unsigned int) registers[rt];
+            return (unsigned int) ra - (unsigned int) rb;
          break;
       case 0x24:
          if (rd != 0)
-            return registers[rs] & registers[rt];
+            return ra & rb;
          break;
       case 0x25:
          if (rd != 0)
-            return registers[rs] | registers[rt];
+            return ra | rb;
          break;
       case 0x26:
          if (rd != 0)
-            return registers[rs] ^ registers[rt];
+            return ra ^ rb;
          break;
       case 0x27:
          if (rd != 0)
-            return ~(registers[rs] | registers[rt]);
+            return ~(ra | rb);
          break;
       case 0x2A:
          if (rd != 0) {
-            if ((signed int) registers[rs] < (signed int) registers[rt])
+            if ((signed int) ra < (signed int) rb)
                return 1;
             else
                return 0;
@@ -87,7 +87,7 @@ unsigned executeR(unsigned rs, unsigned rt, unsigned rd, unsigned shamt,\
          break;
       case 0x2B:
          if (rd != 0) {
-            if ((unsigned int) registers[rs] < (unsigned int) registers[rt])
+            if ((unsigned int) ra < (unsigned int) rb)
                return 1;
             else
                return 0;
