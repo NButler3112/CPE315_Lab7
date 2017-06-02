@@ -4,6 +4,32 @@
 
 #define ALLOC_SIZE 10
 
+void printIF_ID(IF_ID i)
+{
+   printf("Instruction: 0x%08x, New PC: 0x%08x\n", i.instruction, i.nextPC);
+}
+
+void printID_EX(ID_EX i)
+{
+   printf("Opcode: 0x%02x\n", i.opcode);
+   printf("Rs: %d, Rt: %d, Rd: %d, Shamt: %d, Funct: 0x%02x\n", i.rs, i.rt, i.rd, i.shamt, i.funct);
+   printf("Word Index (Shifted): 0x%08x, Jump Address: 0x%08x\n", i.wordIndex, i.jumpAddr);
+   printf("Immediate: 0x%04x, Sign Extended Immediate: 0x%08x\n", i.immed, i.signExtImmed);
+   printf("Ra: 0x%08x, Rb: 0x%08x\n\n", i.ra, i.rb);
+}
+
+void printEX_MEM(EX_MEM e)
+{
+   printf("Branch: %d, Jump: %d, Memory: %d\n", e.bFlag, e.jFlag, e.mFlag);
+   printf("nextPC: 0x%08x, newPC: 0x%08x\n", e.nextPC, e.newPC);
+   printf("Destination Register: %d, Memory Address: 0x%08x, ALUOut: 0x%08x\n\n", e.dReg, e.memAddr, e.aluOut);
+}
+
+void printMEM_WB(MEM_WB m)
+{
+   printf("Destination Register: %d, Memory Address: 0x%08x, Value: 0x%08x\n\n", m.dReg, m.memAddr, m.value);
+}
+
 void printInstr(unsigned memP, unsigned mem[1064])
 {
    int i;
@@ -67,8 +93,11 @@ unsigned makeSignExtHalfWord(unsigned value)
    return seHWord;
 }
 
-void decodeInstr(ID_EX id_ex, unsigned instruction, unsigned pc)
+ID_EX decodeInstr(unsigned instruction, unsigned pc)
 {
+   ID_EX id_ex;
+   id_ex.active = 1;
+   id_ex.nextPC = pc;
    id_ex.opcode = (instruction & 0xFC000000) >> 26;
    id_ex.rs = (instruction & 0x03E00000) >> 21;
    id_ex.rt = (instruction & 0x001F0000) >> 16;
@@ -79,8 +108,7 @@ void decodeInstr(ID_EX id_ex, unsigned instruction, unsigned pc)
    id_ex.jumpAddr = (pc & 0xF0000000) | id_ex.wordIndex;
    id_ex.immed = instruction & 0x0000FFFF;
    id_ex.signExtImmed = makeSignExtImmed(id_ex.immed);
-   fprintf(stderr, "Opcode: 0x%02x, Rs: 0x%02x, Rt: 0x%02x, Rd: 0x%02x, Immed: 0x%04x\n",\
-      id_ex.opcode, id_ex.rs, id_ex.rt, id_ex.rd, id_ex.immed);
+   return id_ex;
 }
 
 char* readline (FILE *file) {

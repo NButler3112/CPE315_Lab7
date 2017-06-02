@@ -58,6 +58,10 @@ typedef struct
    unsigned value; /*Value to write into memory or register*/
 } MEM_WB;
 
+void printIF_ID(IF_ID i);
+void printID_EX(ID_EX i);
+void printEX_MEM(EX_MEM e);
+void printMEM_WB(MEM_WB m);
 void printInstr(unsigned memP, unsigned mem[1064]);
 void invalidInstr(unsigned instruction, unsigned pc);
 unsigned makeBranchAddr(unsigned immed);
@@ -65,7 +69,7 @@ signed makeSignExtImmed(unsigned immed);
 unsigned makeZeroImmed(unsigned immed);
 unsigned makeSignExtByte(unsigned value);
 unsigned makeSignExtHalfWord(unsigned value);
-void decodeInstr(ID_EX id_ex, unsigned instruction, unsigned pc);
+ID_EX decodeInstr(unsigned instruction, unsigned pc);
 char* readline (FILE *file);
 
 #endif

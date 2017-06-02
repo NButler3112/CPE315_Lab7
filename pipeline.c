@@ -70,6 +70,12 @@ static void readInstr(FILE *file)
    }
 }
 
+static IF_ID clearIfId(void)
+{
+   IF_ID i;
+   return i;
+}
+
 static void wb()
 {
    if (mem_wb.active != 1)
@@ -98,9 +104,12 @@ static void mem()
          pc = ex_mem.newPC;
          if (ex_mem.jFlag == 2)
             mem_wb.memFlag = 1;
+         if_id = clearIfId();
+         id_ex = decodeInstr(0x00000000, 0x00000000);
          if_id.active = 0;
          id_ex.active = 0;
          ex_mem.active = 0;
+         printf("NEW PC BECAUSE OF BRANCH AND JUMP: 0x%08x\n", pc);
       }
       else
       {
@@ -134,6 +143,7 @@ static void mem()
          }
       }
       mem_wb.active = 0;
+      printMEM_WB(mem_wb);
    }
 }
 
@@ -143,21 +153,27 @@ static void ex()
    {
       fprintf(stderr, "EXECUTE\n");
       ex_mem.active = 1;
+      ex_mem.jFlag = 0;
+      ex_mem.bFlag = 0;
+      ex_mem.mFlag = 0;
       if (id_ex.iType == 'r' && rFlags[id_ex.rs] == 0)
          ex_mem.aluOut = executeR(id_ex.ra, id_ex.rb, id_ex.rd, id_ex.shamt, id_ex.funct,\
             ex_mem.nextPC, &(ex_mem.dReg), &(ex_mem.newPC), &(ex_mem.jFlag), registers, &haltflag);
+
       else if (id_ex.iType == 'j' && rFlags[31] == 0)
          ex_mem.aluOut = executeJ(id_ex.opcode, id_ex.jumpAddr, ex_mem.nextPC, &(ex_mem.dReg), &(ex_mem.newPC),\
             &(ex_mem.jFlag));
+
       else if (id_ex.iType == 'i' && rFlags[id_ex.rt] == 0)
          ex_mem.aluOut = executeI(id_ex.opcode, id_ex.rs, id_ex.rt, id_ex.immed, registers,\
             &(ex_mem.bFlag), ex_mem.nextPC, &(ex_mem.newPC), &(ex_mem.dReg),\
             &(ex_mem.mFlag), &(ex_mem.memAddr), memory);
+
       ex_mem.nextPC = id_ex.nextPC;
       instr_count++;
       ex_mem.active = 0;
+      printEX_MEM(ex_mem);
    }
-   fprintf(stderr, "DReg: %d, MemAddr: 0x%08x, ALUOut: 0x%08x\n", ex_mem.dReg, ex_mem.memAddr, ex_mem.aluOut);
 }
 
 static void id()
@@ -165,9 +181,7 @@ static void id()
    if (if_id.active != 1)
    {
       fprintf(stderr, "DECODE\n");
-      id_ex.active = 1;
-      id_ex.nextPC = if_id.nextPC;
-      decodeInstr(id_ex, if_id.instruction, if_id.nextPC);
+      id_ex = decodeInstr(if_id.instruction, if_id.nextPC);
       switch (id_ex.opcode)
       {
          case 0x00:
@@ -205,6 +219,7 @@ static void id()
       id_ex.ra = registers[id_ex.rs];
       id_ex.rb = registers[id_ex.rt];
       id_ex.active = 0;
+      printID_EX(id_ex);
    }
 }
 
@@ -215,8 +230,8 @@ static void instrF()
    if_id.instruction = memory[pc/4];
    pc += 4;
    if_id.nextPC = pc;
-   fprintf(stderr, "Instruction: 0x%08X, PC: %d\n", if_id.instruction, pc);
    if_id.active = 0;
+   printIF_ID(if_id);
 }
 
 static void printRegisters()
@@ -254,7 +269,7 @@ int main(int argc, char **argv)
 
    while (haltflag == 0)
    {
-      fprintf(stderr, "In Loop\n");
+      printf("Current PC: 0x%08x\n", pc);
       wb();
       mem();
       ex();
@@ -265,6 +280,7 @@ int main(int argc, char **argv)
       {
          haltflag = 1;
       }
+      printf("------------------------\n");
    }
 
    complete();
