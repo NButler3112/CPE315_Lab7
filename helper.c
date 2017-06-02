@@ -4,6 +4,17 @@
 
 #define ALLOC_SIZE 10
 
+void printInstr(unsigned memP, unsigned mem[1064])
+{
+   int i;
+   printf("Instructions in memory:\n");
+   for (i = 0; i < memP; i+=4)
+   {
+      printf("   0x%08x : 0x%08x\n", i, mem[i/4]);
+   }
+   printf("\n");
+}
+
 void invalidInstr(unsigned instruction, unsigned pc)
 {
    fprintf(stderr, "Instruction 0x%08x at 0x%08x is invalid.  Quitting.\n", instruction, pc);
@@ -52,7 +63,7 @@ unsigned makeSignExtHalfWord(unsigned value)
    if ((value & 0x00008000) == 0x00008000)
       seHWord = 0xFFFF0000 | value;
    else
-      seHWord = 0x0000FFFF | value;
+      seHWord = 0x0000FFFF & value;
    return seHWord;
 }
 
@@ -68,9 +79,11 @@ void decodeInstr(ID_EX id_ex, unsigned instruction, unsigned pc)
    id_ex.jumpAddr = (pc & 0xF0000000) | id_ex.wordIndex;
    id_ex.immed = instruction & 0x0000FFFF;
    id_ex.signExtImmed = makeSignExtImmed(id_ex.immed);
+   fprintf(stderr, "Opcode: 0x%02x, Rs: 0x%02x, Rt: 0x%02x, Rd: 0x%02x, Immed: 0x%04x\n",\
+      id_ex.opcode, id_ex.rs, id_ex.rt, id_ex.rd, id_ex.immed);
 }
 
-char * readline (FILE * file) {
+char* readline (FILE *file) {
    
    size_t size = 0;
 

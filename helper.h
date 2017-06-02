@@ -52,9 +52,13 @@ typedef struct
 typedef struct
 {
    int active;
-   unsigned opcode;
+   unsigned dReg;
+   unsigned memAddr;
+   unsigned memFlag;
+   unsigned value;
 } MEM_WB;
 
+void printInstr(unsigned memP, unsigned mem[1064]);
 void invalidInstr(unsigned instruction, unsigned pc);
 unsigned makeBranchAddr(unsigned immed);
 signed makeSignExtImmed(unsigned immed);
@@ -62,6 +66,6 @@ unsigned makeZeroImmed(unsigned immed);
 unsigned makeSignExtByte(unsigned value);
 unsigned makeSignExtHalfWord(unsigned value);
 void decodeInstr(ID_EX id_ex, unsigned instruction, unsigned pc);
-char * readline (FILE * file);
+char* readline (FILE *file);
 
 #endif

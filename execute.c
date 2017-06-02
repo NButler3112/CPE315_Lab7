@@ -96,6 +96,7 @@ unsigned executeR(unsigned rs, unsigned rt, unsigned rd, unsigned shamt,\
       default:
          if (funct == 0x0C) {
             *haltFlag = 1;
+            fprintf(stderr, "Set haltflag\n");
          }
          break;
    }
@@ -130,18 +131,23 @@ unsigned executeI(unsigned opcode, unsigned rs, unsigned rt, unsigned immed,\
    signed int sign_immed;
 
    *dReg = rt;
+   *mFlag = 0;
    switch (opcode) {
       case 0x04:
          branch_addr = makeBranchAddr(immed);
          if (registers[rs] == registers[rt])
+         {
             *bFlag = 1;
             *newPC = nextPC + branch_addr;
+         }
          break;
       case 0x05:
          branch_addr = makeBranchAddr(immed);
          if (registers[rs] != registers[rt])
+         {
             *bFlag = 1;
             *newPC = nextPC + branch_addr;
+         }
          break;
       case 0x08:
          sign_immed = makeSignExtImmed(immed);
@@ -193,43 +199,63 @@ unsigned executeI(unsigned opcode, unsigned rs, unsigned rt, unsigned immed,\
       case 0x20:
          sign_immed = makeSignExtImmed(immed);
          if (rt != 0)
+         {
+            *mFlag = 1;
+            *memAddr = registers[rs] + sign_immed;
             return makeSignExtByte(mem[registers[rs] + sign_immed] & 0x000000FF);
+         }
          break;
       case 0x21:
          sign_immed = makeSignExtImmed(immed);
          if (rt != 0)
+         {
+            *mFlag = 2;
+            *memAddr = registers[rs] + sign_immed;
             return makeSignExtHalfWord(mem[registers[rs] + sign_immed] & 0x0000FFFF);
+         }
          break;
       case 0x23:
          sign_immed = makeSignExtImmed(immed);
          if (rt != 0)
+         {
+            *mFlag = 3;
+            *memAddr = registers[rs] + sign_immed;
             return mem[registers[rs] + sign_immed];
+         }
          break;
       case 0x24:
          zero_immed = makeZeroImmed(immed);
          if (rt != 0)
+         {
+            *mFlag = 4;
+            *memAddr = registers[rs] + zero_immed;
             return 0x000000FF & makeSignExtByte(mem[registers[rs] + zero_immed] & 0x000000FF);
+         }
          break;
       case 0x25:
          zero_immed = makeZeroImmed(immed);
          if (rt != 0)
+         {
+            *mFlag = 5;
+            *memAddr = registers[rs] + zero_immed;
             return 0x0000FFFF & makeSignExtHalfWord(mem[registers[rs] + zero_immed] & 0x0000FFFF);
+         }
          break;
       case 0x28:
          sign_immed = makeSignExtImmed(immed);
-         *mFlag = 1;
+         *mFlag = 10;
          *memAddr = registers[rs] + sign_immed;
          return registers[rt] & 0x000000FF;
          break;
       case 0x29:
          sign_immed = makeSignExtImmed(immed);
-         *mFlag = 1;
+         *mFlag = 10;
          *memAddr = registers[rs] + sign_immed;
          return registers[rt] & 0x0000FFFF;
          break;
       case 0x2B:
          sign_immed = makeSignExtImmed(immed);
-         *mFlag = 1;
+         *mFlag = 10;
          *memAddr = registers[rs] + sign_immed;
          return registers[rt];
          break;

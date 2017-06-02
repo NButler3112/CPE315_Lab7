@@ -9,7 +9,7 @@ IF_ID if_id;
 ID_EX id_ex;
 EX_MEM ex_mem;
 MEM_WB mem_wb;
-int haltflag, total_clocks;
+int haltflag = 0, total_clocks;
 unsigned clock_count;
 unsigned instr_count;
 unsigned instruction = 0;
@@ -74,7 +74,12 @@ static void wb()
 {
    if (mem_wb.active != 1)
    {
-
+      fprintf(stderr, "WRITEBACK\n");
+      if (mem_wb.memFlag == 1)
+         memory[mem_wb.memAddr] = mem_wb.value;
+      else
+         registers[mem_wb.dReg] = mem_wb.value;
+      rFlags[mem_wb.dReg] = 0;
    }
 }
 
@@ -82,7 +87,48 @@ static void mem()
 {
    if (ex_mem.active != 1)
    {
+      fprintf(stderr, "MEMORY\n");
       mem_wb.active = 1;
+      if (ex_mem.bFlag != 0 || ex_mem.jFlag != 0)
+      {
+         pc = ex_mem.newPC;
+         if_id.active = 0;
+         id_ex.active = 0;
+         ex_mem.active = 0;
+      }
+      else
+      {  mem_wb.dReg = ex_mem.dReg;
+         mem_wb.value = ex_mem.aluOut;
+         mem_wb.memFlag = 0;
+         switch(ex_mem.mFlag)
+         {
+            case 1:
+               mem_wb.value = makeSignExtByte(memory[ex_mem.memAddr] & 0x000000FF);
+               break;
+            case 2:
+               mem_wb.value = makeSignExtHalfWord(memory[ex_mem.memAddr] & 0x0000FFFF);
+               break;
+            case 3:
+               mem_wb.value = memory[ex_mem.memAddr];
+               break;
+            case 4:
+               mem_wb.value = 0x000000FF & makeSignExtByte(memory[ex_mem.memAddr] &\
+                  0x000000FF);
+               break;
+            case 5:
+               mem_wb.value = 0x0000FFFF & makeSignExtHalfWord(memory[ex_mem.memAddr] &\
+                  0x0000FFFF);
+               break;
+            case 10:
+               mem_wb.memFlag = 1;
+               mem_wb.memAddr = ex_mem.memAddr;
+               break;
+         }
+         if (ex_mem.mFlag != 0)
+         {
+            memref_count++;
+         }
+      }
       mem_wb.active = 0;
    }
 }
@@ -91,6 +137,7 @@ static void ex()
 {
    if (id_ex.active != 1)
    {
+      fprintf(stderr, "EXECUTE\n");
       ex_mem.active = 1;
       if (id_ex.iType == 'r' && rFlags[id_ex.rs] == 0)
          ex_mem.aluOut = executeR(id_ex.rs, id_ex.rt, id_ex.rd, id_ex.shamt, id_ex.funct,\
@@ -101,17 +148,19 @@ static void ex()
       else if (id_ex.iType == 'i' && rFlags[id_ex.rt] == 0)
          executeI(id_ex.opcode, id_ex.rs, id_ex.rt, id_ex.immed, registers,\
             &(ex_mem.bFlag), ex_mem.nextPC, &(ex_mem.newPC), &(ex_mem.dReg),\
-            memory);
+            &(ex_mem.mFlag), &(ex_mem.memAddr), memory);
       ex_mem.nextPC = id_ex.nextPC;
       instr_count++;
       ex_mem.active = 0;
    }
+   fprintf(stderr, "DReg: %d, MemAddr: 0x%08x\n", ex_mem.dReg, ex_mem.memAddr);
 }
 
 static void id()
 {
    if (if_id.active != 1)
    {
+      fprintf(stderr, "DECODE\n");
       id_ex.active = 1;
       id_ex.nextPC = if_id.nextPC;
       decodeInstr(id_ex, if_id.instruction, if_id.nextPC);
@@ -157,10 +206,12 @@ static void id()
 
 static void instrF()
 {
+   fprintf(stderr, "FETCH\n");
    if_id.active = 1;
    if_id.instruction = memory[pc/4];
-   if_id.nextPC = pc + 4;
    pc += 4;
+   if_id.nextPC = pc;
+   fprintf(stderr, "Instruction: 0x%08X, PC: %d\n", if_id.instruction, pc);
    if_id.active = 0;
 }
 
@@ -195,13 +246,21 @@ int main(int argc, char **argv)
    readInstr(file);
    fclose(file);
 
-   for (haltflag = 0; haltflag; clock_count++)
+   printInstr(mem_pointer, memory);
+
+   while (haltflag == 0)
    {
+      fprintf(stderr, "In Loop\n");
       wb();
       mem();
       ex();
       id();
       instrF();
+      clock_count++;
+      if (instr_count == 50)
+      {
+         haltflag = 1;
+      }
    }
 
    complete();
