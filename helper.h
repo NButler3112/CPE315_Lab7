@@ -10,6 +10,11 @@ typedef struct _mb_hdr
    unsigned char filler2[64-16];
 } MB_HDR, *MB_HDR_PTR;
 
+typedef struct _addr {
+   unsigned int pc;
+   unsigned int old_pc;
+} ADDR;
+
 typedef struct
 {
    int active;             /*Instruction Fetch Active Status*/

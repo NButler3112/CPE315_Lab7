@@ -48,7 +48,7 @@ EX_MEM executeR(ID_EX i, int *haltFlag)
       case 0x09:
          e.dReg = 31;
          e.nextPC = (unsigned) i.ra;
-         e.aluOut = i.nextPC - 4;
+         e.aluOut = i.nextPC;
          e.bjFlag = 1;
          break;
       case 0x20:
@@ -100,7 +100,8 @@ EX_MEM executeR(ID_EX i, int *haltFlag)
          }
          break;
       default:
-         if (i.funct == 10) {
+
+         if (i.funct == 0x0C) {
             *haltFlag = 1;
          }
          else
@@ -124,7 +125,7 @@ EX_MEM executeJ(ID_EX i)
    e.memAddr = 0x00000000;
    e.mFlag = 0;
    e.bjFlag = 0;
-   printf("here. %d %d\n", i.opcode, i.jumpAddr);
+   
    switch (i.opcode) {
       case 0x02:
          e.nextPC = i.jumpAddr;
@@ -132,7 +133,7 @@ EX_MEM executeJ(ID_EX i)
          break;
       case 0x03:
          e.dReg = 31;
-         e.aluOut = i.nextPC - 4;
+         e.aluOut = i.nextPC;
          e.nextPC = i.jumpAddr;
          e.bjFlag = 1;
          break;
