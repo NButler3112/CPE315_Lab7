@@ -124,6 +124,7 @@ EX_MEM executeJ(ID_EX i)
    e.memAddr = 0x00000000;
    e.mFlag = 0;
    e.bjFlag = 0;
+   printf("here. %d %d\n", i.opcode, i.jumpAddr);
    switch (i.opcode) {
       case 0x02:
          e.nextPC = i.jumpAddr;

@@ -86,7 +86,7 @@ static void wb()
 {
    if (mem_wb.active != 1)
    {
-      fprintf(stderr, "WRITEBACK\n");
+      /*fprintf(stderr, "WRITEBACK\n");*/
 
       /*SAVING TO MEMORY (STORE)*/
       if (mem_wb.memFlag == 1)
@@ -106,7 +106,7 @@ static void mem()
 {
    if (ex_mem.active != 1)
    {
-      fprintf(stderr, "MEMORY\n");
+      /*fprintf(stderr, "MEMORY\n");*/
 
       /*SET NORMAL EX_MEM VALUES*/
       mem_wb.active = 1;
@@ -120,6 +120,7 @@ static void mem()
        * not execute since it doesn't have valid passing registers*/
       if (ex_mem.bjFlag == 1)
       {
+         printf("jump: %08x\n", ex_mem.nextPC);
          pc = ex_mem.nextPC;
          if_id = clearIfId();
          id_ex = decodeInstr(0x00000000, 0x00000000);
@@ -127,7 +128,7 @@ static void mem()
          if_id.active = 1;
          id_ex.active = 1;
          ex_mem.active = 1;
-         printf("NEW PC BECAUSE OF BRANCH AND JUMP: 0x%08x\n", pc);
+         /*printf("NEW PC BECAUSE OF BRANCH AND JUMP: 0x%08x\n", pc);*/
       }
 
       /*IF MEMORY NEEDS TO BE ACCESS (READ OR WRITE)*/
@@ -160,7 +161,7 @@ static void mem()
          }
       }
       mem_wb.active = 0;
-      printMEM_WB(mem_wb);
+      /*printMEM_WB(mem_wb);*/
    }
 }
 
@@ -168,10 +169,15 @@ static void ex()
 {
    if (id_ex.active != 1)
    {
-      fprintf(stderr, "EXECUTE\n");
+      /*fprintf(stderr, "EXECUTE\n");*/
       /*IF REGISTER INSTRUCTION*/
-      if (id_ex.iType == 'r')
+      if (id_ex.iType == 'r') {
+         if (id_ex.funct == 0x0C) {
+            haltflag = 1;
+         }
          ex_mem = executeR(id_ex, &haltflag);
+         
+      }
 
       /*IF JUMP INSTRUCTION*/
       else if (id_ex.iType == 'j')
@@ -200,7 +206,7 @@ static void ex()
          if (ex_mem.dReg != 0)
             rFlags[ex_mem.dReg] = 1;
       }
-      printEX_MEM(ex_mem);
+      /*printEX_MEM(ex_mem);*/
    }
 }
 
@@ -208,7 +214,7 @@ static void id()
 {
    if (if_id.active != 1)
    {
-      fprintf(stderr, "DECODE\n");
+      /*fprintf(stderr, "DECODE\n");*/
 
       /*Pull instruction variables from instuction no matter the instruction
        * type*/
@@ -254,13 +260,13 @@ static void id()
       id_ex.ra = registers[id_ex.rs];
       id_ex.rb = registers[id_ex.rt];
       id_ex.active = 0;
-      printID_EX(id_ex);
+      /*printID_EX(id_ex);*/
    }
 }
 
 static void instrF()
 {
-   fprintf(stderr, "FETCH\n");
+   /*fprintf(stderr, "FETCH\n");*/
    if_id.active = 1;
    
    /*GET INSTRUCTION*/
@@ -272,7 +278,7 @@ static void instrF()
    /*PASS PC+4*/
    if_id.nextPC = pc;
    if_id.active = 0;
-   printIF_ID(if_id);
+   /*printIF_ID(if_id);*/
 }
 
 static void printRegisters()
@@ -310,6 +316,8 @@ int main(int argc, char **argv)
    id_ex.active = 1;
    ex_mem.active = 1;
    mem_wb.active = 1;
+   
+   pc = mb_hdr.entry;
 
    while (haltflag == 0)
    {
@@ -323,11 +331,11 @@ int main(int argc, char **argv)
 
       /*It is to prevent a infinite loop. It is not getting to syscall 
        * Possible error in branch */
-      if (instr_count == 250)
+      if (instr_count == 1000)
       {
          haltflag = 1;
       }
-      printf("------------------------\n");
+      /*printf("------------------------\n");*/
    }
 
    complete();
