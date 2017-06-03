@@ -76,16 +76,29 @@ static IF_ID clearIfId(void)
    return i;
 }
 
+static EX_MEM clearExMem(void)
+{
+   EX_MEM e;
+   return e;;
+}
+
 static void wb()
 {
    if (mem_wb.active != 1)
    {
       fprintf(stderr, "WRITEBACK\n");
-      if (mem_wb.memFlag == 2)
+
+      /*SAVING TO MEMORY (STORE)*/
+      if (mem_wb.memFlag == 1)
          memory[mem_wb.memAddr] = mem_wb.value;
-      else if (mem_wb.memFlag == 1)
+
+      /*SAVING TO REGISTERS (EVERYTHING EXCEPT STORE)*/
+      else if (mem_wb.dReg != 0)
          registers[mem_wb.dReg] = mem_wb.value;
+
+      /*SHOW REGISTERS AS AVAILABLE FOR USE*/
       rFlags[mem_wb.dReg] = 0;
+      instr_count++;
    }
 }
 
@@ -94,24 +107,34 @@ static void mem()
    if (ex_mem.active != 1)
    {
       fprintf(stderr, "MEMORY\n");
+
+      /*SET NORMAL EX_MEM VALUES*/
       mem_wb.active = 1;
       mem_wb.dReg = ex_mem.dReg;
+      mem_wb.memAddr = ex_mem.memAddr;
       mem_wb.value = ex_mem.aluOut;
       mem_wb.memFlag = 0;
+
+      /*IF BRANCH OR JUMP IS HAPPENING*/
+      /*Must clear IF_ID and ID_EX registers. Set active to high to indicate
+       * not execute since it doesn't have valid passing registers*/
       if (ex_mem.bjFlag == 1)
       {
-         mem_wb.memFlag = 0;
          pc = ex_mem.nextPC;
-
          if_id = clearIfId();
          id_ex = decodeInstr(0x00000000, 0x00000000);
-         if_id.active = 0;
-         id_ex.active = 0;
-         ex_mem.active = 0;
+         id_ex.iType = 'r';
+         if_id.active = 1;
+         id_ex.active = 1;
+         ex_mem.active = 1;
          printf("NEW PC BECAUSE OF BRANCH AND JUMP: 0x%08x\n", pc);
       }
-      else
+
+      /*IF MEMORY NEEDS TO BE ACCESS (READ OR WRITE)*/
+      /*Based on mFlag, determines new value (load) or memFlag (store)*/
+      else if (ex_mem.mFlag != 0)
       {
+         memref_count++;
          switch(ex_mem.mFlag)
          {
             case 1:
@@ -132,13 +155,8 @@ static void mem()
                   0x0000FFFF);
                break;
             case 10:
-               mem_wb.memFlag = 2;
-               mem_wb.memAddr = ex_mem.memAddr;
+               mem_wb.memFlag = 1;
                break;
-         }
-         if (ex_mem.mFlag != 0)
-         {
-            memref_count++;
          }
       }
       mem_wb.active = 0;
@@ -151,17 +169,37 @@ static void ex()
    if (id_ex.active != 1)
    {
       fprintf(stderr, "EXECUTE\n");
-      if (id_ex.iType == 'r' && rFlags[id_ex.rs] == 0)
+      /*IF REGISTER INSTRUCTION*/
+      if (id_ex.iType == 'r')
          ex_mem = executeR(id_ex, &haltflag);
 
-      else if (id_ex.iType == 'j' && rFlags[31] == 0)
+      /*IF JUMP INSTRUCTION*/
+      else if (id_ex.iType == 'j')
          ex_mem = executeJ(id_ex);
 
-      else if (id_ex.iType == 'i' && rFlags[id_ex.rt] == 0)
+      /*IF IMMEDIATE INSTRUCTION*/
+      else if (id_ex.iType == 'i')
          ex_mem = executeI(id_ex);
 
-      instr_count++;
-      ex_mem.active = 0;
+      /*NO INVALID INSTRUCTION BC ALREADY HANDLED IN ID*/
+
+      /*IF REGISTER IS BEING EDITED*/
+      /*Clear passing register and set this function as active to wait for 
+       * updated value*/
+      if (ex_mem.dReg != 0 && rFlags[ex_mem.dReg] == 1)
+      {
+         clearExMem();
+         ex_mem.active = 1;
+      }
+
+      /*IF REGISTER IS NOT BEING EDITED*/
+      /*Set register flag to indicate is will being edited*/
+      if (rFlags[ex_mem.dReg] == 0)
+      {
+         ex_mem.active = 0;
+         if (ex_mem.dReg != 0)
+            rFlags[ex_mem.dReg] = 1;
+      }
       printEX_MEM(ex_mem);
    }
 }
@@ -171,7 +209,12 @@ static void id()
    if (if_id.active != 1)
    {
       fprintf(stderr, "DECODE\n");
+
+      /*Pull instruction variables from instuction no matter the instruction
+       * type*/
       id_ex = decodeInstr(if_id.instruction, if_id.nextPC);
+
+      /*Determine instruction type*/
       switch (id_ex.opcode)
       {
          case 0x00:
@@ -206,6 +249,8 @@ static void id()
             invalidInstr(if_id.instruction, id_ex.nextPC - 4);
             break;
       }
+
+      /*PULL DATA FROM REGISTERS*/
       id_ex.ra = registers[id_ex.rs];
       id_ex.rb = registers[id_ex.rt];
       id_ex.active = 0;
@@ -217,8 +262,14 @@ static void instrF()
 {
    fprintf(stderr, "FETCH\n");
    if_id.active = 1;
+   
+   /*GET INSTRUCTION*/
    if_id.instruction = memory[pc/4];
+
+   /*UPDATE PC FOR NEXT FETCH*/
    pc += 4;
+
+   /*PASS PC+4*/
    if_id.nextPC = pc;
    if_id.active = 0;
    printIF_ID(if_id);
@@ -256,6 +307,9 @@ int main(int argc, char **argv)
    fclose(file);
 
    printInstr(mem_pointer, memory);
+   id_ex.active = 1;
+   ex_mem.active = 1;
+   mem_wb.active = 1;
 
    while (haltflag == 0)
    {
@@ -266,7 +320,10 @@ int main(int argc, char **argv)
       id();
       instrF();
       clock_count++;
-      if (instr_count == 50)
+
+      /*It is to prevent a infinite loop. It is not getting to syscall 
+       * Possible error in branch */
+      if (instr_count == 250)
       {
          haltflag = 1;
       }

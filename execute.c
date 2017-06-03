@@ -10,7 +10,7 @@ EX_MEM executeR(ID_EX i, int *haltFlag)
 {
    EX_MEM e;
    e.active = 1;
-   e.nextPC = i.nextPC + 4;
+   e.nextPC = i.nextPC;
    e.aluOut = 0;
    e.dReg = i.rd;
    e.memAddr = 0x00000000;
@@ -42,14 +42,13 @@ EX_MEM executeR(ID_EX i, int *haltFlag)
             e.aluOut = (signed int) i.rb >> (unsigned int) i.ra;
          break;
       case 0x08:
-         e.dReg = 0;
          e.nextPC = (unsigned int) i.ra;
          e.bjFlag = 1;
          break;
       case 0x09:
          e.dReg = 31;
          e.nextPC = (unsigned) i.ra;
-         e.aluOut = i.nextPC;
+         e.aluOut = i.nextPC - 4;
          e.bjFlag = 1;
          break;
       case 0x20:
@@ -101,11 +100,15 @@ EX_MEM executeR(ID_EX i, int *haltFlag)
          }
          break;
       default:
-         if (i.funct == 0x0C) {
+         if (i.funct == 10) {
             *haltFlag = 1;
          }
          else
+         {
             e.dReg = 0;
+            if (i.opcode == 0)
+               printf("OPCODE = 0. DO NOTHING\n");
+         }
          break;
    }
    return e;
@@ -115,7 +118,7 @@ EX_MEM executeJ(ID_EX i)
 {
    EX_MEM e;
    e.active = 1;
-   e.nextPC = i.nextPC + 4;
+   e.nextPC = i.nextPC;
    e.aluOut = 0;
    e.dReg = 0;
    e.memAddr = 0x00000000;
@@ -128,6 +131,7 @@ EX_MEM executeJ(ID_EX i)
          break;
       case 0x03:
          e.dReg = 31;
+         e.aluOut = i.nextPC - 4;
          e.nextPC = i.jumpAddr;
          e.bjFlag = 1;
          break;
@@ -143,7 +147,7 @@ EX_MEM executeI(ID_EX i)
 
    EX_MEM e;
    e.active = 1;
-   e.nextPC = i.nextPC + 4;
+   e.nextPC = i.nextPC;
    e.aluOut = 0;
    e.dReg = i.rt;
    e.memAddr = 0x00000000;
@@ -154,7 +158,7 @@ EX_MEM executeI(ID_EX i)
          branch_addr = makeBranchAddr(i.immed);
          if (i.ra == i.rb)
          {
-            e.nextPC = (i.nextPC - 8) + branch_addr;
+            e.nextPC = i.nextPC + branch_addr;
             e.bjFlag = 1;
          }
          break;
@@ -162,7 +166,7 @@ EX_MEM executeI(ID_EX i)
          branch_addr = makeBranchAddr(i.immed);
          if (i.ra != i.rb)
          {
-            e.nextPC = (i.nextPC - 8) + branch_addr;
+            e.nextPC = i.nextPC + branch_addr;
             e.bjFlag = 1;
          }
          break;
@@ -217,12 +221,12 @@ EX_MEM executeI(ID_EX i)
          sign_immed = makeSignExtImmed(i.immed);
          if (i.rt != 0)
          {
-            e.memFlag = 1;
+            e.mFlag = 1;
             e.memAddr = i.ra + sign_immed;
          }
          break;
       case 0x21:
-         sign_immed = makeSignExtImmed(immed);
+         sign_immed = makeSignExtImmed(i.immed);
          if (i.rt != 0)
          {
             e.mFlag = 2;

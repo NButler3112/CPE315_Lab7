@@ -15,13 +15,7 @@ Instructions in memory:
    0x00000034 : 0x03e00008
 
 Current PC: 0x00000000
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000000, newPC: 0x00000000
-Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
-
-Opcode: 0x00
+Opcode: 0x00, Instruction Type: r
 Rs: 0, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x00
 Word Index (Shifted): 0x00000000, Jump Address: 0x00000000
 Immediate: 0x0000, Sign Extended Immediate: 0x00000000
@@ -30,13 +24,11 @@ Ra: 0x00000000, Rb: 0x00000000
 Instruction: 0x0001004f, New PC: 0x00000004
 ------------------------
 Current PC: 0x00000004
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000000, newPC: 0x00000000
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000000
 Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x00
+Opcode: 0x00, Instruction Type: r
 Rs: 0, Rt: 1, Rd: 0, Shamt: 1, Funct: 0x0f
 Word Index (Shifted): 0x0004013c, Jump Address: 0x0004013c
 Immediate: 0x004f, Sign Extended Immediate: 0x0000004f
@@ -47,11 +39,12 @@ Instruction: 0x8c040000, New PC: 0x00000008
 Current PC: 0x00000008
 Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000004, newPC: 0x00000000
+OPCODE = 0. DO NOTHING
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000004
 Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x23
+Opcode: 0x23, Instruction Type: i
 Rs: 0, Rt: 4, Rd: 0, Shamt: 0, Funct: 0x00
 Word Index (Shifted): 0x00100000, Jump Address: 0x00100000
 Immediate: 0x0000, Sign Extended Immediate: 0x00000000
@@ -62,11 +55,11 @@ Instruction: 0x0c000006, New PC: 0x0000000c
 Current PC: 0x0000000c
 Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
 
-Branch: 0, Jump: 0, Memory: 3
-nextPC: 0x00000008, newPC: 0x00000000
-Destination Register: 4, Memory Address: 0x00000000, ALUOut: 0x0001004f
+Branch or Jump: 0, Memory: 3
+nextPC: 0x00000008
+Destination Register: 4, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x03
+Opcode: 0x03, Instruction Type: j
 Rs: 0, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x06
 Word Index (Shifted): 0x00000018, Jump Address: 0x00000018
 Immediate: 0x0006, Sign Extended Immediate: 0x00000006
@@ -77,11 +70,11 @@ Instruction: 0x00024025, New PC: 0x00000010
 Current PC: 0x00000010
 Destination Register: 4, Memory Address: 0x00000000, Value: 0x0001004f
 
-Branch: 0, Jump: 2, Memory: 0
-nextPC: 0x0000000c, newPC: 0x00000018
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000018
 Destination Register: 31, Memory Address: 0x00000000, ALUOut: 0x00000008
 
-Opcode: 0x00
+Opcode: 0x00, Instruction Type: r
 Rs: 0, Rt: 2, Rd: 8, Shamt: 0, Funct: 0x25
 Word Index (Shifted): 0x00090094, Jump Address: 0x00090094
 Immediate: 0x4025, Sign Extended Immediate: 0x00004025
@@ -93,26 +86,10 @@ Current PC: 0x00000014
 NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000018
 Destination Register: 31, Memory Address: 0x00000000, Value: 0x00000008
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000000, newPC: 0x00000018
-Destination Register: 31, Memory Address: 0x00000000, ALUOut: 0x00000008
-
-Opcode: 0x00
-Rs: 0, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x00
-Word Index (Shifted): 0x00000000, Jump Address: 0x00000000
-Immediate: 0x0000, Sign Extended Immediate: 0x00000000
-Ra: 0x00000000, Rb: 0x00000000
-
 Instruction: 0x00001024, New PC: 0x0000001c
 ------------------------
 Current PC: 0x0000001c
-Destination Register: 31, Memory Address: 0x00000000, Value: 0x00000008
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00007f9d, newPC: 0x00000018
-Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
-
-Opcode: 0x00
+Opcode: 0x00, Instruction Type: r
 Rs: 0, Rt: 0, Rd: 2, Shamt: 0, Funct: 0x24
 Word Index (Shifted): 0x00004090, Jump Address: 0x00004090
 Immediate: 0x1024, Sign Extended Immediate: 0x00001024
@@ -121,13 +98,11 @@ Ra: 0x00000000, Rb: 0x00000000
 Instruction: 0x34080001, New PC: 0x00000020
 ------------------------
 Current PC: 0x00000020
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x0000001c, newPC: 0x00000018
+Branch or Jump: 0, Memory: 0
+nextPC: 0x0000001c
 Destination Register: 2, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x0d
+Opcode: 0x0d, Instruction Type: i
 Rs: 0, Rt: 8, Rd: 0, Shamt: 0, Funct: 0x01
 Word Index (Shifted): 0x00200004, Jump Address: 0x00200004
 Immediate: 0x0001, Sign Extended Immediate: 0x00000001
@@ -138,26 +113,26 @@ Instruction: 0x01044824, New PC: 0x00000024
 Current PC: 0x00000024
 Destination Register: 2, Memory Address: 0x00000000, Value: 0x00000000
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000020, newPC: 0x00000018
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000020
 Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000001
 
-Opcode: 0x00
+Opcode: 0x00, Instruction Type: r
 Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
 Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
 Immediate: 0x4824, Sign Extended Immediate: 0x00004824
-Ra: 0x00000000, Rb: 0x00000000
+Ra: 0x00000000, Rb: 0x0001004f
 
 Instruction: 0x11200001, New PC: 0x00000028
 ------------------------
 Current PC: 0x00000028
 Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000001
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000024, newPC: 0x00000018
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
 Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x04
+Opcode: 0x04, Instruction Type: i
 Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
 Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
 Immediate: 0x0001, Sign Extended Immediate: 0x00000001
@@ -168,11 +143,11 @@ Instruction: 0x20420001, New PC: 0x0000002c
 Current PC: 0x0000002c
 Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000000
 
-Branch: 1, Jump: 0, Memory: 0
-nextPC: 0x00000028, newPC: 0x00000028
+Branch or Jump: 1, Memory: 0
+nextPC: 0x0000002c
 Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x08
+Opcode: 0x08, Instruction Type: i
 Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
 Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
 Immediate: 0x0001, Sign Extended Immediate: 0x00000001
@@ -181,74 +156,41 @@ Ra: 0x00000000, Rb: 0x00000000
 Instruction: 0x00084040, New PC: 0x00000030
 ------------------------
 Current PC: 0x00000030
-NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000028
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x0000002c
 Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000000, newPC: 0x00000028
-Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
-
-Opcode: 0x00
-Rs: 0, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x00
-Word Index (Shifted): 0x00000000, Jump Address: 0x00000000
-Immediate: 0x0000, Sign Extended Immediate: 0x00000000
-Ra: 0x00000000, Rb: 0x00000000
-
-Instruction: 0x20420001, New PC: 0x0000002c
-------------------------
-Current PC: 0x0000002c
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00007f9d, newPC: 0x00000028
-Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
-
-Opcode: 0x08
-Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
-Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
-Immediate: 0x0001, Sign Extended Immediate: 0x00000001
-Ra: 0x00000000, Rb: 0x00000000
 
 Instruction: 0x00084040, New PC: 0x00000030
 ------------------------
 Current PC: 0x00000030
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x0000002c, newPC: 0x00000028
-Destination Register: 2, Memory Address: 0x00000000, ALUOut: 0x00000001
-
-Opcode: 0x00
+Opcode: 0x00, Instruction Type: r
 Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
 Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
 Immediate: 0x4040, Sign Extended Immediate: 0x00004040
-Ra: 0x00000000, Rb: 0x00000000
+Ra: 0x00000000, Rb: 0x00000001
 
 Instruction: 0x1500fffb, New PC: 0x00000034
 ------------------------
 Current PC: 0x00000034
-Destination Register: 2, Memory Address: 0x00000000, Value: 0x00000001
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000002
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000030, newPC: 0x00000028
-Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000000
-
-Opcode: 0x05
+Opcode: 0x05, Instruction Type: i
 Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
 Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
 Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
-Ra: 0x00000000, Rb: 0x00000000
+Ra: 0x00000001, Rb: 0x00000000
 
 Instruction: 0x03e00008, New PC: 0x00000038
 ------------------------
 Current PC: 0x00000038
-Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000000
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000002
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000034, newPC: 0x00000028
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
 Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x00
+Opcode: 0x00, Instruction Type: r
 Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
 Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
 Immediate: 0x0008, Sign Extended Immediate: 0x00000008
@@ -257,135 +199,376 @@ Ra: 0x00000008, Rb: 0x00000000
 Instruction: 0x00000000, New PC: 0x0000003c
 ------------------------
 Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
 Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 1, Memory: 0
-nextPC: 0x00000038, newPC: 0x00000008
-Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000008
-
-Opcode: 0x00
-Rs: 0, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x00
-Word Index (Shifted): 0x00000000, Jump Address: 0x00000000
-Immediate: 0x0000, Sign Extended Immediate: 0x00000000
-Ra: 0x00000000, Rb: 0x00000000
-
-Instruction: 0x00000000, New PC: 0x00000040
-------------------------
-Current PC: 0x00000040
-NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000008
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000008
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000000, newPC: 0x00000008
-Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000008
-
-Opcode: 0x00
-Rs: 0, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x00
-Word Index (Shifted): 0x00000000, Jump Address: 0x00000000
-Immediate: 0x0000, Sign Extended Immediate: 0x00000000
-Ra: 0x00000000, Rb: 0x00000000
-
-Instruction: 0x0c000006, New PC: 0x0000000c
-------------------------
-Current PC: 0x0000000c
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000008
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00007f9d, newPC: 0x00000008
-Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
-
-Opcode: 0x03
-Rs: 0, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x06
-Word Index (Shifted): 0x00000018, Jump Address: 0x00000018
-Immediate: 0x0006, Sign Extended Immediate: 0x00000006
-Ra: 0x00000000, Rb: 0x00000000
-
-Instruction: 0x00024025, New PC: 0x00000010
-------------------------
-Current PC: 0x00000010
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 2, Memory: 0
-nextPC: 0x0000000c, newPC: 0x00000018
-Destination Register: 31, Memory Address: 0x00000000, ALUOut: 0x00007f9d
-
-Opcode: 0x00
-Rs: 0, Rt: 2, Rd: 8, Shamt: 0, Funct: 0x25
-Word Index (Shifted): 0x00090094, Jump Address: 0x00090094
-Immediate: 0x4025, Sign Extended Immediate: 0x00004025
-Ra: 0x00000000, Rb: 0x00000000
-
-Instruction: 0x3402000a, New PC: 0x00000014
-------------------------
-Current PC: 0x00000014
-NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000018
-Destination Register: 31, Memory Address: 0x00000000, Value: 0x00007f9d
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000000, newPC: 0x00000018
-Destination Register: 31, Memory Address: 0x00000000, ALUOut: 0x00007f9d
-
-Opcode: 0x00
-Rs: 0, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x00
-Word Index (Shifted): 0x00000000, Jump Address: 0x00000000
-Immediate: 0x0000, Sign Extended Immediate: 0x00000000
-Ra: 0x00000000, Rb: 0x00000000
-
-Instruction: 0x00001024, New PC: 0x0000001c
-------------------------
-Current PC: 0x0000001c
-Destination Register: 31, Memory Address: 0x00000000, Value: 0x00007f9d
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00007f9d, newPC: 0x00000018
-Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
-
-Opcode: 0x00
-Rs: 0, Rt: 0, Rd: 2, Shamt: 0, Funct: 0x24
-Word Index (Shifted): 0x00004090, Jump Address: 0x00004090
-Immediate: 0x1024, Sign Extended Immediate: 0x00001024
-Ra: 0x00000000, Rb: 0x00000000
-
-Instruction: 0x34080001, New PC: 0x00000020
-------------------------
-Current PC: 0x00000020
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x0000001c, newPC: 0x00000018
-Destination Register: 2, Memory Address: 0x00000000, ALUOut: 0x00000000
-
-Opcode: 0x0d
-Rs: 0, Rt: 8, Rd: 0, Shamt: 0, Funct: 0x01
-Word Index (Shifted): 0x00200004, Jump Address: 0x00200004
-Immediate: 0x0001, Sign Extended Immediate: 0x00000001
-Ra: 0x00000000, Rb: 0x00000000
 
 Instruction: 0x01044824, New PC: 0x00000024
 ------------------------
 Current PC: 0x00000024
-Destination Register: 2, Memory Address: 0x00000000, Value: 0x00000000
-
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000020, newPC: 0x00000018
-Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000001
-
-Opcode: 0x00
+Opcode: 0x00, Instruction Type: r
 Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
 Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
 Immediate: 0x4824, Sign Extended Immediate: 0x00004824
-Ra: 0x00000000, Rb: 0x00000000
+Ra: 0x00000002, Rb: 0x0001004f
 
 Instruction: 0x11200001, New PC: 0x00000028
 ------------------------
 Current PC: 0x00000028
-Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000001
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000002
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000024, newPC: 0x00000018
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000000, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000002
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000000, Rb: 0x00000000
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000002
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000004
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000002, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000004
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000004, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000004
+
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000002, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000004
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000028
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000000, Rb: 0x00000000
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 2, Memory Address: 0x00000000, ALUOut: 0x00000001
+
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000004
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Destination Register: 2, Memory Address: 0x00000000, Value: 0x00000001
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000008
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000004, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000008
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000008, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000008
+
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000004, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000008
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000028
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000001, Rb: 0x00000001
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 2, Memory Address: 0x00000000, ALUOut: 0x00000002
+
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000008
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Destination Register: 2, Memory Address: 0x00000000, Value: 0x00000002
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000010
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000010
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000010, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
 Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x04
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000028
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000002, Rb: 0x00000002
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 2, Memory Address: 0x00000000, ALUOut: 0x00000003
+
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000010
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Destination Register: 2, Memory Address: 0x00000000, Value: 0x00000003
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000020
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000010, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000020
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000020, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x04, Instruction Type: i
 Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
 Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
 Immediate: 0x0001, Sign Extended Immediate: 0x00000001
@@ -396,89 +579,632 @@ Instruction: 0x20420001, New PC: 0x0000002c
 Current PC: 0x0000002c
 Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000000
 
-Branch: 1, Jump: 0, Memory: 0
-nextPC: 0x00000028, newPC: 0x00000028
+Branch or Jump: 1, Memory: 0
+nextPC: 0x0000002c
 Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x08
+Opcode: 0x08, Instruction Type: i
 Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
 Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
 Immediate: 0x0001, Sign Extended Immediate: 0x00000001
-Ra: 0x00000000, Rb: 0x00000000
+Ra: 0x00000003, Rb: 0x00000003
 
 Instruction: 0x00084040, New PC: 0x00000030
 ------------------------
 Current PC: 0x00000030
-NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000028
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x0000002c
 Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000000, newPC: 0x00000028
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000020
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000040
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000020, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000040
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
 Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x00
-Rs: 0, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x00
-Word Index (Shifted): 0x00000000, Jump Address: 0x00000000
-Immediate: 0x0000, Sign Extended Immediate: 0x00000000
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000040, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000040
+
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
 Ra: 0x00000000, Rb: 0x00000000
 
 Instruction: 0x20420001, New PC: 0x0000002c
 ------------------------
 Current PC: 0x0000002c
-Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000040
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00007f9d, newPC: 0x00000028
+Branch or Jump: 1, Memory: 0
+nextPC: 0x0000002c
 Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
 
-Opcode: 0x08
+Opcode: 0x08, Instruction Type: i
 Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
 Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
 Immediate: 0x0001, Sign Extended Immediate: 0x00000001
-Ra: 0x00000000, Rb: 0x00000000
+Ra: 0x00000003, Rb: 0x00000003
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000040
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000080
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000040, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000080
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000080, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000040, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000028
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000003, Rb: 0x00000003
 
 Instruction: 0x00084040, New PC: 0x00000030
 ------------------------
 Current PC: 0x00000030
 Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x0000002c, newPC: 0x00000028
-Destination Register: 2, Memory Address: 0x00000000, ALUOut: 0x00000001
+Branch or Jump: 0, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 2, Memory Address: 0x00000000, ALUOut: 0x00000004
 
-Opcode: 0x00
+Opcode: 0x00, Instruction Type: r
 Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
 Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
 Immediate: 0x4040, Sign Extended Immediate: 0x00004040
-Ra: 0x00000000, Rb: 0x00000000
+Ra: 0x00000000, Rb: 0x00000080
 
 Instruction: 0x1500fffb, New PC: 0x00000034
 ------------------------
 Current PC: 0x00000034
-Destination Register: 2, Memory Address: 0x00000000, Value: 0x00000001
+Destination Register: 2, Memory Address: 0x00000000, Value: 0x00000004
 
-Branch: 0, Jump: 0, Memory: 0
-nextPC: 0x00000030, newPC: 0x00000028
-Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000000
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000100
 
-Opcode: 0x05
+Opcode: 0x05, Instruction Type: i
 Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
 Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
 Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
-Ra: 0x00000000, Rb: 0x00000000
+Ra: 0x00000080, Rb: 0x00000000
 
 Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000100
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000100, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000000, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000004, Rb: 0x00000004
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000100
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000200
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000100, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000200
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000200, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000000, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000004, Rb: 0x00000004
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000200
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000400
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000200, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000400
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000400, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000000, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000004, Rb: 0x00000004
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000400
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00000800
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000400, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00000800
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00000800, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000000, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000004, Rb: 0x00000004
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x00084040, New PC: 0x00000030
+------------------------
+Current PC: 0x00000030
+Opcode: 0x00, Instruction Type: r
+Rs: 0, Rt: 8, Rd: 8, Shamt: 1, Funct: 0x00
+Word Index (Shifted): 0x00210100, Jump Address: 0x00210100
+Immediate: 0x4040, Sign Extended Immediate: 0x00004040
+Ra: 0x00000000, Rb: 0x00000800
+
+Instruction: 0x1500fffb, New PC: 0x00000034
+------------------------
+Current PC: 0x00000034
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000030
+Destination Register: 8, Memory Address: 0x00000000, ALUOut: 0x00001000
+
+Opcode: 0x05, Instruction Type: i
+Rs: 8, Rt: 0, Rd: 31, Shamt: 31, Funct: 0x3b
+Word Index (Shifted): 0x0403ffec, Jump Address: 0x0403ffec
+Immediate: 0xfffb, Sign Extended Immediate: 0x0000fffb
+Ra: 0x00000800, Rb: 0x00000000
+
+Instruction: 0x03e00008, New PC: 0x00000038
+------------------------
+Current PC: 0x00000038
+Destination Register: 8, Memory Address: 0x00000000, Value: 0x00001000
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x00, Instruction Type: r
+Rs: 31, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x08
+Word Index (Shifted): 0x0f800020, Jump Address: 0x0f800020
+Immediate: 0x0008, Sign Extended Immediate: 0x00000008
+Ra: 0x00000008, Rb: 0x00000000
+
+Instruction: 0x00000000, New PC: 0x0000003c
+------------------------
+Current PC: 0x0000003c
+NEW PC BECAUSE OF BRANCH AND JUMP: 0x00000020
+Destination Register: 0, Memory Address: 0x00000000, Value: 0x00000000
+
+Instruction: 0x01044824, New PC: 0x00000024
+------------------------
+Current PC: 0x00000024
+Opcode: 0x00, Instruction Type: r
+Rs: 8, Rt: 4, Rd: 9, Shamt: 0, Funct: 0x24
+Word Index (Shifted): 0x04112090, Jump Address: 0x04112090
+Immediate: 0x4824, Sign Extended Immediate: 0x00004824
+Ra: 0x00001000, Rb: 0x0001004f
+
+Instruction: 0x11200001, New PC: 0x00000028
+------------------------
+Current PC: 0x00000028
+Branch or Jump: 0, Memory: 0
+nextPC: 0x00000024
+Destination Register: 9, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x04, Instruction Type: i
+Rs: 9, Rt: 0, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x04800004, Jump Address: 0x04800004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000000, Rb: 0x00000000
+
+Instruction: 0x20420001, New PC: 0x0000002c
+------------------------
+Current PC: 0x0000002c
+Destination Register: 9, Memory Address: 0x00000000, Value: 0x00000000
+
+Branch or Jump: 1, Memory: 0
+nextPC: 0x0000002c
+Destination Register: 0, Memory Address: 0x00000000, ALUOut: 0x00000000
+
+Opcode: 0x08, Instruction Type: i
+Rs: 2, Rt: 2, Rd: 0, Shamt: 0, Funct: 0x01
+Word Index (Shifted): 0x01080004, Jump Address: 0x01080004
+Immediate: 0x0001, Sign Extended Immediate: 0x00000001
+Ra: 0x00000004, Rb: 0x00000004
+
+Instruction: 0x00084040, New PC: 0x00000030
 ------------------------
 Registers:
    $ 0 : 0x00000000
    $ 1 : 0x00000000
-   $ 2 : 0x00000000
+   $ 2 : 0x00000004
    $ 3 : 0x00000000
-   $ 4 : 0x00000000
+   $ 4 : 0x0001004f
    $ 5 : 0x00000000
    $ 6 : 0x00000000
    $ 7 : 0x00000000
-   $ 8 : 0x00000000
+   $ 8 : 0x00001000
    $ 9 : 0x00000000
    $10 : 0x00000000
    $11 : 0x00000000
@@ -501,8 +1227,8 @@ Registers:
    $28 : 0x00000000
    $29 : 0x00000000
    $30 : 0x00000000
-   $31 : 0x00007f9d
-Instructions Run:  30
-Clock Cycles:      30
+   $31 : 0x00000008
+Instructions Run:  100
+Clock Cycles:      103
 Memory References: 1
-CPI: 1.000000
+CPI: 1.030000

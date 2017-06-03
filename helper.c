@@ -11,7 +11,7 @@ void printIF_ID(IF_ID i)
 
 void printID_EX(ID_EX i)
 {
-   printf("Opcode: 0x%02x\n", i.opcode);
+   printf("Opcode: 0x%02x, Instruction Type: %c\n", i.opcode, i.iType);
    printf("Rs: %d, Rt: %d, Rd: %d, Shamt: %d, Funct: 0x%02x\n", i.rs, i.rt, i.rd, i.shamt, i.funct);
    printf("Word Index (Shifted): 0x%08x, Jump Address: 0x%08x\n", i.wordIndex, i.jumpAddr);
    printf("Immediate: 0x%04x, Sign Extended Immediate: 0x%08x\n", i.immed, i.signExtImmed);
@@ -97,7 +97,7 @@ ID_EX decodeInstr(unsigned instruction, unsigned pc)
 {
    ID_EX id_ex;
    id_ex.active = 1;
-   id_ex.nextPC = pc + 4;
+   id_ex.nextPC = pc;
    id_ex.opcode = (instruction & 0xFC000000) >> 26;
    id_ex.rs = (instruction & 0x03E00000) >> 21;
    id_ex.rt = (instruction & 0x001F0000) >> 16;
